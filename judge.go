@@ -17,3 +17,7 @@ var (
 	BASE_COMPILE_FILENAME = "compiled_program"
 	BASE_OUTPUT_FILENAME  = "result.out"
 )
+
+func New() Judge {
+	return &JudgeAdapter{}
+}

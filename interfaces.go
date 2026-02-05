@@ -1,16 +1,19 @@
 package gojudge
 
+import "context"
+
 type Language interface {
 	GetName() string
 	IsCompiled() bool
-	GetCompileCommand(basePath string, filename string) (string, error)
-	GetJudgeCommand(filename string, outputFilename string, testcase string) string
+	GetCompileCommand() string
+	GetRunCommand() string
 	GetExtension() string
+	GetSanitizeFunction() func(err string) string
 }
 
 type Judge interface {
-	Compile(lang Language, filename string)
-	Judge(lang Language, filename string, memoriLimit int, timeLimit int, testcases []string)
+	Compile(context context.Context, lang Language, filename string) error
+	Judge(lang Language, testcase string, memoriLimit int, timeLimit int) JudgeResult
 	RegisterNewLanguage(lang Language)
 	GetLanguages() map[string]Language
 }
