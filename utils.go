@@ -2,7 +2,6 @@ package gojudge
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -10,6 +9,12 @@ import (
 func escapeShellArg(arg string) string {
 	escaped := strings.ReplaceAll(arg, "'", `'\'`)
 	return "'" + escaped + "'"
+}
+
+func EscapeShellArg(arg string) string {
+	return escapeShellArg(arg)
+	// escaped := strings.ReplaceAll(arg, "'", `'\'`)
+	// return "'" + escaped + "'"
 }
 
 func parseRuntime(stream string) (float64, error) {
@@ -54,28 +59,28 @@ func parseRuntime(stream string) (float64, error) {
 	return total, nil
 }
 
-func filterCompilerError(errorMessage string) string {
-	patterns := []*regexp.Regexp{
-		// Windows paths: C:\folder\file.ext
-		regexp.MustCompile(`[A-Za-z]:\\(?:[^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*`),
+// func filterCompilerError(errorMessage string) string {
+// 	patterns := []*regexp.Regexp{
+// 		// Windows paths: C:\folder\file.ext
+// 		regexp.MustCompile(`[A-Za-z]:\\(?:[^\\/:*?"<>|\r\n]+\\)*[^\\/:*?"<>|\r\n]*`),
 
-		// Unix paths: /folder/sub/file.ext
-		regexp.MustCompile(`(?:/[^/\s]+)+`),
+// 		// Unix paths: /folder/sub/file.ext
+// 		regexp.MustCompile(`(?:/[^/\s]+)+`),
 
-		// Any line containing a path
-		regexp.MustCompile(`(?m)^.*[\\/].*$`),
-	}
+// 		// Any line containing a path
+// 		regexp.MustCompile(`(?m)^.*[\\/].*$`),
+// 	}
 
-	filtered := errorMessage
+// 	filtered := errorMessage
 
-	// Apply patterns
-	for _, re := range patterns {
-		filtered = re.ReplaceAllString(filtered, "")
-	}
+// 	// Apply patterns
+// 	for _, re := range patterns {
+// 		filtered = re.ReplaceAllString(filtered, "")
+// 	}
 
-	// Remove empty lines
-	emptyLine := regexp.MustCompile(`(?m)^\s*[\r\n]`)
-	filtered = emptyLine.ReplaceAllString(filtered, "")
+// 	// Remove empty lines
+// 	emptyLine := regexp.MustCompile(`(?m)^\s*[\r\n]`)
+// 	filtered = emptyLine.ReplaceAllString(filtered, "")
 
-	return strings.TrimSpace(filtered)
-}
+// 	return strings.TrimSpace(filtered)
+// }
