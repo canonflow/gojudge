@@ -12,7 +12,7 @@ type Language interface {
 }
 
 type Judge interface {
-	Compile(context context.Context, lang Language, filename string) error
+	Compile(context context.Context, lang Language) error
 	Judge(context context.Context, lang Language, memoriLimit int, timeLimit int) JudgeResult
 	RegisterNewLanguage(lang Language)
 	GetLanguages() map[string]Language

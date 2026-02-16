@@ -42,7 +42,7 @@ func (judge *JudgeAdapter) GetLanguages() map[string]Language {
 	return result
 }
 
-func (judge *JudgeAdapter) Compile(context context.Context, lang Language, filename string) error {
+func (judge *JudgeAdapter) Compile(context context.Context, lang Language) error {
 	compileCommand := lang.GetCompileCommand()
 
 	cmd := exec.CommandContext(context, "bash", "-c", escapeShellArg(compileCommand))
@@ -68,15 +68,16 @@ func (judge *JudgeAdapter) Compile(context context.Context, lang Language, filen
 	return nil
 }
 
-func (judge *JudgeAdapter) Judge(context context.Context, lang Language, memoryLimit int, timeLimit int) JudgeResult {
+func (judge *JudgeAdapter) Judge(context context.Context, lang Language, memoryLimitMB int, timeLimit int) JudgeResult {
 	judgeResult := JudgeResult{
 		Stdout:  "",
 		Stderr:  "",
-		Runtime: fmt.Sprintf("%.3f", float32(memoryLimit)),
+		Runtime: fmt.Sprintf("%.3f", float32(memoryLimitMB)),
 		Verdict: VERDICT_ACCEPTED,
 	}
 
 	runCommand := lang.GetRunCommand()
+	memoryLimit := memoryLimitMB * 1024
 	cmd := exec.CommandContext(
 		context,
 		"bash",
